@@ -1,22 +1,22 @@
-// src/App.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,useMemo } from 'react';
 import pokemonLoadingBg from './assets/Logo.png';
 import PokemonList from './docs/PokemonList';
 import SearchPage from './docs/SearchPage';
+import { POKEMON_TYPES } from './utils/pokemonType'; 
 
 function App() {
   const [pokemons, setPokemons] = useState([]); 
-  const [popularPokemons, setPopularPokemons] = useState([]);
+  const [popularPokemons, setPopularPokemons] = useState([]); 
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const [currentFilterTerm, setCurrentFilterTerm] = useState('');
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState(null); 
   const [recentSearches, setRecentSearches] = useState([]);
-  const [showAllPokemons, setShowAllPokemons] = useState(false); 
+  const [showAllPokemons, setShowAllPokemons] = useState(false);
 
-  const POPULAR_POKEMON_LIMIT = 20; 
-  const ALL_POKEMON_LIMIT = 151; 
-
+  const POPULAR_POKEMON_LIMIT = 20;
+  const ALL_POKEMON_LIMIT = 151;
 
   useEffect(() => {
     const storedSearches = localStorage.getItem('recentPokemonSearches');
@@ -39,7 +39,7 @@ function App() {
       const detailData = await detailResponse.json();
       const id = detailData.id;
       return {
-        name: detailData.name, 
+        name: detailData.name,
         id: id,
         imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`,
         types: detailData.types.map(typeInfo => typeInfo.type.name),
@@ -47,8 +47,7 @@ function App() {
     });
     const detailedPokemons = await Promise.all(detailedPokemonsPromises);
     return detailedPokemons.filter(p => p !== null);
-  }, []); 
-
+  }, []);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -70,7 +69,6 @@ function App() {
         const detailedPopularPokemons = await fetchPokemonDetails(popularPokemonUrls);
         setPopularPokemons(detailedPopularPokemons);
 
-
         const allPokemonsResponse = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${ALL_POKEMON_LIMIT}`);
         if (!allPokemonsResponse.ok) throw new Error('Failed to fetch all pokemons');
         const allPokemonsData = await allPokemonsResponse.json();
@@ -88,7 +86,7 @@ function App() {
     };
 
     loadInitialData();
-  }, [fetchPokemonDetails]); 
+  }, [fetchPokemonDetails]);
 
   const handleOpenSearch = () => {
     setIsSearching(true);
@@ -96,7 +94,6 @@ function App() {
 
   const handleCloseSearch = () => {
     setIsSearching(false);
-
   };
 
   const handleSearchSubmit = (term) => {
@@ -108,12 +105,43 @@ function App() {
     setCurrentFilterTerm(term);
     setIsSearching(false);
     setShowAllPokemons(true); 
+    setSelectedTypeFilter(null); 
   };
 
   const handleShowAllPokemons = () => {
+    setShowAllPokemons(true);
+    setCurrentFilterTerm(''); 
+    setSelectedTypeFilter(null); 
+  };
+
+  const handleTypeFilterClick = (type) => {
+
+    setSelectedTypeFilter(prevType => (prevType === type ? null : type));
     setShowAllPokemons(true); 
     setCurrentFilterTerm(''); 
   };
+
+  const displayedPokemons = useMemo(() => {
+    let listToFilter = showAllPokemons || currentFilterTerm !== '' || selectedTypeFilter !== null ? pokemons : popularPokemons;
+
+    if (currentFilterTerm !== '') {
+      const lowerCaseSearchTerm = currentFilterTerm.toLowerCase();
+      listToFilter = listToFilter.filter(pokemon => {
+        const matchesName = pokemon.name.toLowerCase().includes(lowerCaseSearchTerm);
+        const matchesId = !isNaN(lowerCaseSearchTerm) && String(pokemon.id).includes(lowerCaseSearchTerm);
+        return matchesName || matchesId;
+      });
+    }
+
+    if (selectedTypeFilter) {
+      listToFilter = listToFilter.filter(pokemon =>
+        pokemon.types.includes(selectedTypeFilter)
+      );
+    }
+
+    return listToFilter;
+  }, [pokemons, popularPokemons, showAllPokemons, currentFilterTerm, selectedTypeFilter]);
+
 
   if (isLoading) {
     return (
@@ -148,11 +176,14 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <PokemonList
-        pokemons={showAllPokemons || currentFilterTerm !== '' ? pokemons : popularPokemons} 
+        pokemons={displayedPokemons} 
         initialSearchTerm={currentFilterTerm}
         onSearchInputClick={handleOpenSearch}
-        onShowAllClick={handleShowAllPokemons} 
-        showAllOptionVisible={!showAllPokemons && currentFilterTerm === ''}
+        onShowAllClick={handleShowAllPokemons}
+        showAllOptionVisible={!showAllPokemons && currentFilterTerm === '' && selectedTypeFilter === null} 
+        allPokemonTypes={POKEMON_TYPES} 
+        onTypeFilterClick={handleTypeFilterClick}
+        selectedTypeFilter={selectedTypeFilter} 
       />
     </div>
   );
