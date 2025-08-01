@@ -1,4 +1,25 @@
+
 import React from 'react';
+const typeColors = {
+  normal: 'bg-gray-400',
+  fire: 'bg-red-500',
+  water: 'bg-blue-500',
+  grass: 'bg-green-500',
+  electric: 'bg-yellow-400',
+  ice: 'bg-blue-300',
+  fighting: 'bg-red-700',
+  poison: 'bg-purple-600',
+  ground: 'bg-yellow-700',
+  flying: 'bg-indigo-400',
+  psychic: 'bg-pink-500',
+  bug: 'bg-lime-500',
+  rock: 'bg-yellow-800',
+  ghost: 'bg-indigo-700',
+  dragon: 'bg-indigo-900',
+  steel: 'bg-gray-500',
+  fairy: 'bg-pink-300',
+  dark: 'bg-gray-800',
+};
 
 function PokeCard({ pokemon }) {
   const capitalize = (str) => {
@@ -27,9 +48,24 @@ function PokeCard({ pokemon }) {
         />
       </div>
 
+      {/* Nom du Pokémon */}
       <h3 className="text-xl font-bold text-gray-800 capitalize mb-1">
         {capitalize(pokemon.name)}
       </h3>
+
+      <div className="flex flex-wrap justify-center gap-2 mt-2">
+        {pokemon.types && pokemon.types.map((type) => ( 
+          <span
+            key={type}
+            className={`
+              ${typeColors[type] || 'bg-gray-500'} // Utilise la couleur mappée, ou gris par défaut
+              text-white text-xs font-semibold px-2 py-0.5 rounded-full capitalize
+            `}
+          >
+            {type}
+          </span>
+        ))}
+      </div>
 
     </div>
   );
