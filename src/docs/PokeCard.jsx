@@ -31,7 +31,6 @@ function PokeCard({ pokemon }) {
         {capitalize(pokemon.name)}
       </h3>
 
-      {/* Les types seront ajoutés plus tard */}
     </div>
   );
 }
