@@ -11,7 +11,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=8';
+  const API_URL = 'https://pokeapi.co/api/v2/pokemon?limit=30';
 
   useEffect(() => {
     const fetchPokemons = async () => {
