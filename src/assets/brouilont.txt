@@ -1,0 +1,2 @@
+/// fond de l'index
+style={{//backgroundImage: `url(${pokemonLoadingBg})`,backgroundSize: 'cover',backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}
