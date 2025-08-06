@@ -150,7 +150,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen py-8 bg-gray-100">
+    <div className="w-screen h-screen g-red-100 hpy-8">
       <PokemonList
         pokemons={displayedPokemons}
         initialSearchTerm={currentFilterTerm}

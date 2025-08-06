@@ -30,10 +30,11 @@ function PokemonList({
         <div className="flex flex-wrap justify-center gap-2 p-0 mb-8 rounded-full backdrop-blur-sm">
           <span
             className={`
-              w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold
+              w-10 h-10  bg-white-200 rounded-full flex items-center justify-center text-xs font-bold
               cursor-pointer transition-all duration-200 ease-in-out
-              ${selectedTypeFilter === null ? 'bg-orange-600 border-2 border-white' : 'bg-orange-400'}
-              text-white
+             
+              ${selectedTypeFilter === null ? 'bg-white border-2 ' : 'bg-white'}
+              text-black
               hover:shadow-xl hover:scale-105
             `}
             onClick={() => onTypeFilterClick(null)}
