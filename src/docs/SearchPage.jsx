@@ -85,40 +85,35 @@ function SearchPage({ onBackClick, onSearchSubmit, recentSearches, pokemons }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center p-8">
-      <div className="w-full max-w-4xl flex justify-between items-center mb-16">
-        <button onClick={onBackClick} className="text-gray-400 hover:text-white transition-colors duration-200">
-          <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+    <div className="flex flex-col items-center min-h-screen p-8 text-white bg-gray-800">
+      <div className="flex items-center justify-between w-full max-w-4xl mb-16">
+        <button onClick={onBackClick} className="text-gray-400 transition-colors duration-200 hover:text-white">
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
         </button>
-        <button className="text-gray-400 hover:text-white transition-colors duration-200">
-          <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+        <button className="text-gray-400 transition-colors duration-200 hover:text-white">
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
         </button>
       </div>
 
       {/* Logo Pokémon */}
-      <img src={pokeBall} alt="Pokémon Logo" className="w-80 mb-16" />
+      <img src={pokeBall} alt="Pokémon Logo" className="mb-16 w-80" />
 
       <form onSubmit={handleSubmit} className="w-full max-w-xl mb-8">
         <div className="relative">
           <input
             type="text"
             placeholder="Find a Pokémon..."
-            className="
-              w-full p-4 pl-12 pr-16
-              bg-gray-700 text-white rounded-full border-none
-              focus:outline-none focus:ring-2 focus:ring-blue-500
-              text-lg
-            "
+            className="w-full p-4 pl-12 pr-16 text-lg text-white bg-gray-700 border-none rounded-full  focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={currentSearchTerm}
             onChange={handleInputChange}
           />
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <svg className="h-6 w-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
             </svg>
           </div>
-          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-            <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+            <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="10" stroke="#CC0000" strokeWidth="2"/>
               <path d="M2 12H22" stroke="#CC0000" strokeWidth="2"/>
               <circle cx="12" cy="12" r="4" fill="#CC0000"/>
@@ -130,14 +125,14 @@ function SearchPage({ onBackClick, onSearchSubmit, recentSearches, pokemons }) {
       </form>
 
       {currentSearchTerm.trim() !== '' && liveFilteredPokemons.length > 0 && (
-        <div className="w-full max-w-xl bg-gray-700 rounded-lg shadow-lg overflow-hidden mb-8">
+        <div className="w-full max-w-xl mb-8 overflow-hidden bg-gray-700 rounded-lg shadow-lg">
           {liveFilteredPokemons.map(pokemon => (
             <div
               key={pokemon.id}
-              className="flex items-center p-3 hover:bg-gray-600 cursor-pointer border-b border-gray-600 last:border-b-0"
+              className="flex items-center p-3 border-b border-gray-600 cursor-pointer hover:bg-gray-600 last:border-b-0"
               onClick={() => handleSuggestionClick(pokemon.name)}
             >
-              <img src={pokemon.imageUrl} alt={pokemon.name} className="w-10 h-10 object-contain mr-3" />
+              <img src={pokemon.imageUrl} alt={pokemon.name} className="object-contain w-10 h-10 mr-3" />
               <span className="text-lg capitalize">{pokemon.name}</span>
             </div>
           ))}
@@ -145,19 +140,19 @@ function SearchPage({ onBackClick, onSearchSubmit, recentSearches, pokemons }) {
       )}
 
       {currentSearchTerm.trim() === '' && detailedRecentPokemons.length > 0 && (
-        <div className="w-full max-w-4xl text-left mt-8"> {/* Ajout de mt-8 pour l'espace */}
-          <h3 className="text-xl font-semibold text-gray-300 mb-6">Recent Searches</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="w-full max-w-4xl mt-8 text-left"> {/* Ajout de mt-8 pour l'espace */}
+          <h3 className="mb-6 text-xl font-semibold text-gray-300">Recent Searches</h3>
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {detailedRecentPokemons.map((pokemon) => (
               <div
                 key={pokemon.id}
-                className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity duration-200"
+                className="flex flex-col items-center transition-opacity duration-200 cursor-pointer hover:opacity-80"
                 onClick={() => handleRecentSearchClick(pokemon.name)}
               >
                 <img
                   src={pokemon.imageUrl}
                   alt={pokemon.name}
-                  className="w-20 h-20 object-contain mb-2"
+                  className="object-contain w-20 h-20 mb-2"
                 />
                 <span className="text-sm font-medium capitalize">{pokemon.name}</span>
               </div>

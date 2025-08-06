@@ -14,6 +14,7 @@ function PokemonList({
   selectedTypeFilter
 }) {
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm || '');
+  const [selectedPokemon, setSelectedPokemon] = useState(null); // <-- nouvel état
 
   useEffect(() => {
     setSearchTerm(initialSearchTerm || '');
@@ -90,7 +91,10 @@ function PokemonList({
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4">
         {displayedPokemons.length > 0 ? (
           displayedPokemons.map((pokemon) => (
-            <PokeCard key={pokemon.id} pokemon={pokemon} />
+            // J'ajoute le onClick ici pour ouvrir la modale
+            <div key={pokemon.id} onClick={() => setSelectedPokemon(pokemon)} className="cursor-pointer">
+              <PokeCard pokemon={pokemon} />
+            </div>
           ))
         ) : (
           <p className="text-2xl font-semibold text-center text-white col-span-full drop-shadow">Aucun Pokémon trouvé.</p>
@@ -112,6 +116,50 @@ function PokemonList({
           >
             Rechercher un autre Pokémon
           </button>
+        </div>
+      )}
+
+      {/* MODALE POKEMON */}
+      {selectedPokemon && (
+        <div
+          onClick={() => setSelectedPokemon(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black cursor-pointer bg-opacity-70"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md p-6 bg-white rounded-lg"
+          >
+            <img
+              src={selectedPokemon.imageUrl}
+              alt={selectedPokemon.name}
+              className="w-full h-auto"
+            />
+            <h2 className="mt-4 text-2xl font-bold capitalize">{selectedPokemon.name}</h2>
+
+            <div className="mt-4">
+              <h3 className="mb-2 font-semibold">Stats :</h3>
+              <ul>
+                {selectedPokemon.stats.map((stat) => (
+                  <li key={stat.name} className="mb-1">
+                    <span className="capitalize">{stat.name}:</span> {stat.value}
+                    <div className="w-full h-3 mt-1 bg-gray-300 rounded-full">
+                      <div
+                        className="h-3 bg-green-500 rounded-full"
+                        style={{ width: `${(stat.value / 150) * 100}%` }}
+                      ></div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <button
+              onClick={() => setSelectedPokemon(null)}
+              className="px-4 py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600"
+            >
+              Fermer
+            </button>
+          </div>
         </div>
       )}
     </div>
